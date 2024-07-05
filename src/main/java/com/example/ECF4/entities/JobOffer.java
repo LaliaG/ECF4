@@ -55,4 +55,9 @@ public class JobOffer {
 
     @OneToMany(mappedBy = "jobOffer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Interview> interviews;
+
+
+    public boolean isActive() {
+        return true;
+    }
 }

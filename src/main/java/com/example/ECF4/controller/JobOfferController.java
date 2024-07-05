@@ -10,9 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 public class JobOfferController {
@@ -28,7 +30,7 @@ public class JobOfferController {
     public String home(Model model, HttpSession session) {
         if (authService.isLogged()) {
             model.addAttribute("login", authService.isLogged());
-            model.addAttribute("posts", jobOfferService.getAll());
+            model.addAttribute("jobOffers", jobOfferService.getAll());
             model.addAttribute("Candidate", (Candidate) session.getAttribute("candidate"));
             model.addAttribute("interview", new Interview());
             return "home";
@@ -48,35 +50,64 @@ public class JobOfferController {
         }
     }
 
-    @PostMapping("/post/add")
+    @PostMapping("/add")
     public String addJobOffer(@ModelAttribute("jobOffer") JobOffer jobOffer, HttpSession session) {
+        if (!authService.isLogged()) {
+            return "redirect:/login";
+        }
+        Candidate candidate = (Candidate) session.getAttribute("candidate");
+        if (candidate != null) {
+            jobOffer.setEmployeeHr(candidate.getCandidatename());
+        } else {
+            jobOffer.setEmployeeHr("Unknown");
+        }
+        jobOffer.setCreatedAt(LocalDateTime.now());
+        jobOfferService.save(jobOffer);
+        return "redirect:/jobOffer/";
+    }
+    @GetMapping("/post/edit/{id}")
+    public String editJobOffer(@PathVariable Long id, Model model) {
         if (authService.isLogged()) {
-            jobOffer.setCandidate((Candidate) session.getAttribute("candidate"));
-            jobOffer.setCreatedAt(LocalDateTime.now());
-            JobOfferService.add(jobOffer);
-            return "redirect:/";
+            model.addAttribute("jobOffer", jobOfferService.getById(id));
+            return "jobOffer-form";
         } else {
             return "redirect:/login";
         }
     }
 
-    @GetMapping("/post/edit/{id}")
-    public String editPost(@PathVariable Long id, Model model) {
-        if (authService.isLogged()) {
-            model.addAttribute("post", postService.getById(id));
-            return "post-form";
-        } else {
+    @PostMapping("/edit")
+    public String updateJobOffer(@ModelAttribute("jobOffer") JobOffer jobOffer) {
+        if (!authService.isLogged()) {
             return "redirect:/login";
         }
+        jobOfferService.save(jobOffer);
+        return "redirect:/jobOffer/";
     }
 
     @GetMapping("/post/delete/{id}")
     public String deletePost(@PathVariable Long id) {
         if (authService.isLogged()) {
-            postService.delete(id);
+            jobOfferService.delete(id);
             return "redirect:/";
         } else {
             return "redirect:/login";
         }
+    }
+
+    @GetMapping("/{id}")
+    public String getById(@PathVariable Long id, Model model) {
+        if (!authService.isLogged()) {
+            return "redirect:/login";
+        }
+        model.addAttribute("jobOffer", jobOfferService.getById(id));
+        model.addAttribute("login", true);
+        return "jobOfferDetails";
+    }
+
+    @GetMapping("/jobOffers")
+    public String getAllJobOffers(Model model) {
+        List<JobOffer> jobOffers = jobOfferService.getAll();
+        model.addAttribute("jobOffers", jobOffers);
+        return "jobOffers";
     }
 }

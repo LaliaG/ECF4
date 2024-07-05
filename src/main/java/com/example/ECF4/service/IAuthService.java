@@ -7,4 +7,6 @@ public interface IAuthService {
     boolean isLogged();
     Candidate register(Candidate candidate);
     void deconnexion();
+
+    Object getAll();
 }

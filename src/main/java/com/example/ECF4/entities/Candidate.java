@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Table(name="user")
 @Data
@@ -24,7 +22,7 @@ public class Candidate {
 
     @NotNull
     @Pattern(regexp = "^[A-Za-z]$", message = "Invalid field")
-    private String Candidatename;
+    private String candidatename;
 
     @NotNull
     @Pattern(regexp = "^[\\w.-]+@[a-zA-Z\\d.-]+\\.[a-zA-Z]{2,}$", message = "Invalid field")
@@ -36,7 +34,11 @@ public class Candidate {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{12,}$", message = "Invalid Field")
     private String password;
 
-   // @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public boolean isActive() {
+        return true;
+    }
+
+    // @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     //private List<Interview> interviews;
 
 }
