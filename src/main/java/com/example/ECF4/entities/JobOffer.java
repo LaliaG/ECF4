@@ -36,8 +36,8 @@ public class JobOffer {
     @NotNull
     @Pattern(regexp = "^[A-Za-z\\d\\s].{0,49}$", message = "Invalid field")
     private String employeeHr;
-    //private String departement;
-    //private String position;
+    private String departement;
+    private String jobPosition;
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
@@ -47,11 +47,6 @@ public class JobOffer {
         return this.status == JobOfferStatus.PUBLISHED;
     }
 
-
-   // @ManyToOne
-   // @JoinColumn(name = "candidate_id")
-   // private Candidate candidate;
-   // OU private String candidateId;
 
     @OneToMany(mappedBy = "jobOffer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Interview> interviews;

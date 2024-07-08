@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name="user")
 @Data
@@ -38,7 +40,10 @@ public class Candidate {
         return true;
     }
 
-    // @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    //private List<Interview> interviews;
+    public void setJobOffer(JobOffer jobOffer) {
+    }
+
+     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Interview> interviews;
 
 }

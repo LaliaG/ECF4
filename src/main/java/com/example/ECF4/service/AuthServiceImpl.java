@@ -47,4 +47,9 @@ public class AuthServiceImpl implements IAuthService{
         _httpSession.removeAttribute("user");
         _httpSession.removeAttribute("login");
     }
+
+    @Override
+    public Object getAll() {
+        return null;
+    }
 }

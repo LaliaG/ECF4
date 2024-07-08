@@ -38,4 +38,5 @@ public class Interview {
     @JoinColumn(name = "job_offer_id")
     private JobOffer jobOffer;
 
+
 }
